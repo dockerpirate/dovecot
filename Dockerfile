@@ -4,18 +4,17 @@ FROM alpine:3.12
 SHELL ["/bin/sh", "-eu", "-c"]
 
 # Update base system
-RUN apk update
-RUN apk upgrade
+RUN apk update && apk upgrade && \
 
 # Install pre-requirements
-RUN apk add --no-cache ca-certificates
-RUN update-ca-certificates
+	 apk add --no-cache ca-certificates && \
+ 	 update-ca-certificates && \
 
 # Disable Dovecot TLS during installation to prevent key from being pregenerated
-RUN mkdir -p /etc/dovecot && echo "ssl = no" > /etc/dovecot/local.conf
+	mkdir -p /etc/dovecot && echo "ssl = no" > /etc/dovecot/local.conf && \
 
 # Install all alpine dovecot packages (except documentation and development files)
-RUN apk add --no-cache \
+ 	apk add --no-cache \
 	dovecot \
 	dovecot-gssapi \
 	dovecot-ldap \
@@ -26,11 +25,11 @@ RUN apk add --no-cache \
 	dovecot-pigeonhole-plugin-ldap \
 	dovecot-pop3d \
 	dovecot-sqlite \
-	dovecot-submissiond
+	dovecot-submissiond && \
 	
 
-# Re-enable the default Dovecot TLS configuration
-RUN rm /etc/dovecot/local.conf
+# Re-enable the default Dovecot TLS configuration 
+	rm /etc/dovecot/local.conf
 
 # Add wrapper script that will generate the TLS configuration on startup
 COPY rootfs /
