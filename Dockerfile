@@ -46,7 +46,8 @@ RUN sed -i -e 's,!include auth-system.conf.ext,!include auth-passwdfile.conf.ext
 RUN install -m 640 -o dovecot -g mail /dev/null /etc/dovecot/users
 # Set default mail location to "/var/lib/mail"
 RUN sed -i -e 's,#mail_location =,mail_location = /var/lib/mail/%n,' \
-	/etc/dovecot/conf.d/10-mail.conf
+	/etc/dovecot/conf.d/10-mail.conf && \
+	chmod +x /usr/local/bin/dovecot-wrapper
 
 # Remove left-over temporary files
 RUN find /var/cache/apk /tmp -mindepth 1 -delete
